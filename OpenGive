@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OpenGive Foundation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ── Reset & Variables ───────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:       #060d18;
+    --surface:  #0d1a2e;
+    --surface2: #132238;
+    --border:   #1e3352;
+    --border2:  #243d5e;
+    --text:     #e8f0fd;
+    --muted:    #6b89b0;
+    --dim:      #3a5578;
+    --gold:     #d4a853;
+    --gold2:    #f0c97a;
+    --teal:     #38bfa1;
+    --red:      #e05c5c;
+    --blue:     #4a9eff;
+    --font-d:   'Cormorant Garamond', Georgia, serif;
+    --font-b:   'Outfit', sans-serif;
+    --radius:   16px;
+    --shadow:   0 8px 32px rgba(0,0,0,.5);
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-b);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Scrollbar ───────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 99px; }
+
+  /* ── Navigation ──────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(6,13,24,.88);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 68px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer; text-decoration: none;
+  }
+  .nav-logo {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; color: var(--bg);
+  }
+  .nav-title {
+    font-family: var(--font-d); font-size: 22px; font-weight: 700;
+    color: var(--text); letter-spacing: .02em;
+  }
+  .nav-links { display: flex; gap: 4px; }
+  .nav-link {
+    padding: 8px 18px; border-radius: 10px; border: none;
+    background: transparent; color: var(--muted);
+    font-family: var(--font-b); font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: all .18s;
+  }
+  .nav-link:hover { color: var(--text); background: rgba(255,255,255,.05); }
+  .nav-link.active { color: var(--gold); background: rgba(212,168,83,.12); }
+
+  /* ── Pages ───────────────────────────────────────────── */
+  .page { display: none; animation: fadeIn .3s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ── Hero ────────────────────────────────────────────── */
+  .hero {
+    text-align: center; padding: 96px 24px 72px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(212,168,83,.1) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block; margin-bottom: 24px;
+    background: rgba(212,168,83,.12); border: 1px solid rgba(212,168,83,.3);
+    border-radius: 99px; padding: 6px 20px;
+    font-size: 11px; font-weight: 700; color: var(--gold2);
+    letter-spacing: .12em; text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: var(--font-d); font-weight: 700;
+    font-size: clamp(40px, 7vw, 80px); line-height: 1.05;
+    color: var(--text); margin-bottom: 24px;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--gold), var(--gold2), #e8c86a);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    max-width: 580px; margin: 0 auto 44px;
+    color: var(--muted); font-size: 18px; line-height: 1.75; font-weight: 300;
+  }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 26px; border-radius: 12px; border: none;
+    font-family: var(--font-b); font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all .18s; text-decoration: none;
+  }
+  .btn:hover { opacity: .85; transform: translateY(-1px); }
+  .btn:active { transform: none; opacity: 1; }
+  .btn-gold { background: linear-gradient(135deg, var(--gold), var(--gold2)); color: var(--bg); }
+  .btn-teal { background: linear-gradient(135deg, var(--teal), #2da88d); color: #fff; }
+  .btn-red  { background: linear-gradient(135deg, var(--red), #c94040); color: #fff; }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border2); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+  .btn-lg { padding: 15px 38px; font-size: 16px; border-radius: 14px; }
+
+  /* ── Stats Grid ──────────────────────────────────────── */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px; max-width: 980px; margin: 0 auto 80px; padding: 0 24px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px 28px;
+    transition: border-color .2s;
+  }
+  .stat-card:hover { border-color: var(--border2); }
+  .stat-val { font-family: var(--font-d); font-size: 30px; font-weight: 700; color: var(--text); }
+  .stat-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
+  .stat-sub { font-size: 12px; color: var(--dim); margin-top: 2px; }
+
+  /* ── Section ─────────────────────────────────────────── */
+  .section { max-width: 1120px; margin: 0 auto; padding: 0 24px 80px; }
+  .section-title { font-family: var(--font-d); font-size: 36px; font-weight: 700; color: var(--text); text-align: center; margin-bottom: 8px; }
+  .section-sub { text-align: center; color: var(--dim); margin-bottom: 40px; font-size: 15px; }
+
+  /* ── Cause Cards ─────────────────────────────────────── */
+  .causes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 24px; }
+  .cause-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 30px;
+    display: flex; flex-direction: column; gap: 18px;
+    transition: border-color .25s, transform .25s;
+    cursor: default;
+  }
+  .cause-card:hover { transform: translateY(-4px); }
+  .cause-icon { font-size: 40px; line-height: 1; }
+  .cause-name { font-weight: 700; font-size: 18px; color: var(--text); margin-bottom: 4px; }
+  .cause-desc { color: var(--muted); font-size: 14px; line-height: 1.65; }
+  .progress-wrap { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 99px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+  .cause-meta { display: flex; justify-content: space-between; font-size: 13px; }
+  .cause-raised { font-weight: 700; }
+  .cause-goal { color: var(--dim); }
+
+  /* ── Ledger Table ────────────────────────────────────── */
+  .ledger-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .ledger-head {
+    display: grid; grid-template-columns: 1fr 1fr 120px 110px;
+    padding: 12px 22px; background: var(--surface);
+    font-size: 11px; font-weight: 700; color: var(--dim);
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+  .ledger-row {
+    display: grid; grid-template-columns: 1fr 1fr 120px 110px;
+    padding: 14px 22px; border-top: 1px solid var(--border);
+    align-items: center; gap: 10px; transition: background .15s;
+  }
+  .ledger-row:nth-child(odd) { background: var(--surface); }
+  .ledger-row:nth-child(even) { background: rgba(13,26,46,.6); }
+  .ledger-row:hover { background: var(--surface2); }
+  .contrib-name { font-weight: 600; font-size: 14px; }
+  .contrib-msg { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .contrib-cause { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); }
+  .contrib-amount { font-weight: 800; font-size: 16px; color: var(--teal); text-align: right; padding-right: 10px; }
+  .contrib-date { font-size: 12px; color: var(--dim); }
+  .ledger-total { text-align: right; margin-top: 14px; font-weight: 800; font-size: 20px; color: var(--gold); }
+
+  /* ── Impact Updates ──────────────────────────────────── */
+  .update-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 4px solid var(--gold); border-radius: var(--radius);
+    padding: 28px 30px; margin-bottom: 18px;
+  }
+  .update-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+  .update-title { font-weight: 700; font-size: 18px; color: var(--text); }
+  .update-meta { font-size: 13px; color: var(--dim); margin-top: 4px; }
+  .update-spent { color: var(--red); font-weight: 800; font-size: 20px; }
+  .update-receipt { font-size: 12px; color: var(--dim); margin-top: 3px; }
+  .update-body { color: var(--muted); line-height: 1.75; font-size: 15px; }
+
+  /* ── Filter Tabs ─────────────────────────────────────── */
+  .filter-wrap { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+  .filter-btn {
+    padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border2);
+    background: transparent; color: var(--muted);
+    font-family: var(--font-b); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all .18s;
+  }
+  .filter-btn:hover { color: var(--text); }
+  .filter-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(212,168,83,.1); }
+
+  /* ── Modal ───────────────────────────────────────────── */
+  .modal-backdrop {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+    z-index: 500; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 22px; padding: 36px; max-width: 530px; width: 100%;
+    max-height: 92vh; overflow-y: auto;
+    animation: modalIn .25s ease;
+  }
+  @keyframes modalIn { from { opacity: 0; transform: scale(.95) translateY(12px); } to { opacity: 1; transform: none; } }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+  .modal-title { font-family: var(--font-d); font-size: 24px; font-weight: 700; color: var(--text); }
+  .modal-close {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: var(--surface2); border: none; color: var(--muted);
+    font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+  }
+  .modal-close:hover { color: var(--text); background: var(--border2); }
+
+  /* ── Form ────────────────────────────────────────────── */
+  .form-label {
+    display: block; margin-bottom: 7px;
+    font-size: 11px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; padding: 11px 15px; margin-bottom: 18px;
+    background: var(--bg); border: 1px solid var(--border2);
+    border-radius: 12px; color: var(--text);
+    font-family: var(--font-b); font-size: 15px; outline: none;
+    transition: border-color .18s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
+  .form-textarea { resize: vertical; min-height: 80px; }
+  .form-select option { background: var(--surface); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-check { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; cursor: pointer; }
+  .form-check input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--gold); }
+  .form-check span { color: var(--muted); font-size: 14px; line-height: 1.5; }
+  .form-error { font-size: 12px; color: var(--red); margin-top: -14px; margin-bottom: 14px; }
+
+  /* ── Amount Presets ──────────────────────────────────── */
+  .preset-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .preset-btn {
+    flex: 1 1 60px; padding: 11px 8px;
+    border: 1px solid var(--border2); border-radius: 12px;
+    background: var(--bg); color: var(--muted);
+    font-family: var(--font-b); font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: all .18s; text-align: center;
+  }
+  .preset-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .preset-btn.selected { border-color: var(--gold); color: var(--gold); background: rgba(212,168,83,.1); }
+
+  /* ── Cause Banner ────────────────────────────────────── */
+  .cause-banner {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--surface2); border-radius: 14px;
+    padding: 16px 20px; margin-bottom: 24px;
+  }
+  .cause-banner-icon { font-size: 34px; }
+  .cause-banner-name { font-weight: 700; color: var(--text); font-size: 16px; }
+  .cause-banner-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  /* ── Security Note ───────────────────────────────────── */
+  .security-note {
+    background: rgba(74,158,255,.07); border: 1px solid rgba(74,158,255,.2);
+    border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;
+    font-size: 13px; color: var(--muted); line-height: 1.6;
+  }
+
+  /* ── Tag ─────────────────────────────────────────────── */
+  .tag {
+    display: inline-block; padding: 4px 12px; border-radius: 99px;
+    font-size: 12px; font-weight: 700;
+  }
+  .tag-green { background: rgba(56,191,161,.12); color: var(--teal); }
+  .tag-red   { background: rgba(224,92,92,.12);  color: var(--red); }
+  .tag-gold  { background: rgba(212,168,83,.12);  color: var(--gold2); }
+
+  /* ── Admin ───────────────────────────────────────────── */
+  .admin-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 32px; }
+  .admin-tab {
+    padding: 9px 20px; border-radius: 10px; border: none;
+    background: transparent; color: var(--muted);
+    font-family: var(--font-b); font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all .18s;
+  }
+  .admin-tab:hover { color: var(--text); }
+  .admin-tab.active { background: rgba(212,168,83,.15); color: var(--gold); }
+
+  .admin-section { display: none; }
+  .admin-section.active { display: block; animation: fadeIn .25s ease; }
+
+  .admin-cause-row {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 22px; margin-bottom: 12px;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .admin-cause-name { font-weight: 700; color: var(--text); font-size: 15px; }
+
+  .perf-bar-wrap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 24px; margin-bottom: 14px;
+  }
+  .perf-bar-header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+
+  /* ── Login ───────────────────────────────────────────── */
+  .login-wrap { max-width: 420px; margin: 80px auto; padding: 0 20px; }
+  .login-card {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 22px; padding: 44px;
+  }
+  .login-icon { font-size: 48px; text-align: center; margin-bottom: 16px; }
+
+  /* ── Footer ──────────────────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 44px 24px; text-align: center;
+  }
+  .footer-brand { font-family: var(--font-d); font-size: 20px; color: var(--muted); margin-bottom: 8px; }
+  .footer-tagline { font-size: 13px; color: var(--dim); margin-bottom: 20px; }
+  .footer-links { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; }
+  .footer-link { font-size: 13px; color: var(--dim); cursor: pointer; transition: color .15s; }
+  .footer-link:hover { color: var(--muted); }
+
+  /* ── Success Panel ───────────────────────────────────── */
+  .success-panel { text-align: center; padding: 24px 0; }
+  .success-emoji { font-size: 68px; margin-bottom: 20px; }
+
+  /* ── Responsive ──────────────────────────────────────── */
+  @media (max-width: 640px) {
+    .ledger-head, .ledger-row { grid-template-columns: 1fr auto; }
+    .ledger-head span:nth-child(2), .ledger-head span:nth-child(4),
+    .ledger-row .contrib-cause, .ledger-row .contrib-date { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    nav { padding: 0 16px; }
+    .nav-title { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ──────────────────────────────── NAV ──────────────────────────────────── -->
+<nav>
+  <a class="nav-brand" onclick="showPage('home')">
+    <div class="nav-logo">✦</div>
+    <span class="nav-title">OpenGive</span>
+  </a>
+  <div class="nav-links">
+    <button class="nav-link active" id="nav-home"           onclick="showPage('home')">Home</button>
+    <button class="nav-link"        id="nav-transparency"   onclick="showPage('transparency')">Transparency</button>
+    <button class="nav-link"        id="nav-admin"          onclick="showPage('admin')">Admin</button>
+  </div>
+</nav>
+
+<!-- ──────────────────────────────── HOME ─────────────────────────────────── -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-badge">Transparent · Accountable · Impactful</div>
+    <h1>Give with<br /><span>True Purpose</span></h1>
+    <p>Every dollar tracked. Every cause audited. Every impact reported publicly. Philanthropy you can actually trust.</p>
+    <button class="btn btn-gold btn-lg" onclick="document.getElementById('causes-section').scrollIntoView({behavior:'smooth'})">
+      Explore Causes &darr;
+    </button>
+  </div>
+
+  <div class="stats-grid" id="home-stats"></div>
+
+  <div class="section" id="causes-section">
+    <h2 class="section-title">Active Causes</h2>
+    <p class="section-sub">Choose what moves you — every contribution is publicly recorded</p>
+    <div class="causes-grid" id="home-causes"></div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────── TRANSPARENCY ─────────────────────────── -->
+<div class="page" id="page-transparency">
+  <div class="section" style="padding-top:48px">
+    <h2 class="section-title" style="text-align:left">Transparency Ledger</h2>
+    <p class="section-sub" style="text-align:left;margin-bottom:32px">Every contribution recorded. Nothing hidden. Fully auditable.</p>
+
+    <div class="stats-grid" style="max-width:100%;padding:0;margin-bottom:40px" id="transparency-stats"></div>
+
+    <div class="filter-wrap" id="ledger-filters"></div>
+
+    <div class="ledger-wrap">
+      <div class="ledger-head">
+        <span>Contributor</span><span>Cause</span><span style="text-align:right;padding-right:10px">Amount</span><span>Date</span>
+      </div>
+      <div id="ledger-body"></div>
+    </div>
+    <div class="ledger-total" id="ledger-total"></div>
+
+    <!-- How funds are used -->
+    <h2 class="section-title" style="text-align:left;margin:64px 0 8px">How Funds Are Used</h2>
+    <p class="section-sub" style="text-align:left;margin-bottom:32px">Posted by admins with receipts — every expense accounted for</p>
+    <div id="updates-list"></div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────── ADMIN ────────────────────────────────── -->
+<div class="page" id="page-admin">
+  <!-- Login -->
+  <div id="admin-login">
+    <div class="login-wrap">
+      <div class="login-card">
+        <div class="login-icon">🔐</div>
+        <h2 class="section-title" style="margin-bottom:8px">Admin Access</h2>
+        <p class="section-sub" style="margin-bottom:28px">Enter your administrator password</p>
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="admin-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')adminLogin()" />
+        <div class="form-error" id="admin-err" style="display:none">Incorrect password. Try: <strong>admin</strong></div>
+        <button class="btn btn-gold" style="width:100%;padding:13px" onclick="adminLogin()">Sign In</button>
+        <p style="text-align:center;font-size:12px;color:var(--dim);margin-top:18px">Demo password: <code style="color:var(--gold2)">admin</code></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="admin-dashboard" style="display:none">
+    <div class="section" style="padding-top:48px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:32px">
+        <div>
+          <h2 style="font-family:var(--font-d);font-size:34px;font-weight:700;color:var(--text)">Admin Dashboard</h2>
+          <p style="color:var(--dim);margin-top:4px">Foundation Management Console</p>
+        </div>
+        <button class="btn btn-ghost" onclick="adminLogout()">Sign Out &rarr;</button>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('overview')">Overview</button>
+        <button class="admin-tab" onclick="switchTab('causes')">Causes</button>
+        <button class="admin-tab" onclick="switchTab('post')">Post Update</button>
+        <button class="admin-tab" onclick="switchTab('contributors')">Contributors</button>
+      </div>
+
+      <!-- Overview -->
+      <div class="admin-section active" id="tab-overview">
+        <div class="stats-grid" style="max-width:100%;padding:0;margin-bottom:40px" id="admin-stats"></div>
+        <h3 style="font-family:var(--font-d);font-size:26px;color:var(--text);margin-bottom:20px">Cause Performance</h3>
+        <div id="admin-perf"></div>
+      </div>
+
+      <!-- Causes -->
+      <div class="admin-section" id="tab-causes">
+        <h3 style="font-family:var(--font-d);font-size:26px;color:var(--text);margin-bottom:20px">Manage Causes</h3>
+        <div id="admin-causes-list"></div>
+        <h3 style="font-family:var(--font-d);font-size:26px;color:var(--text);margin:40px 0 20px">Add New Cause</h3>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px">
+          <div class="form-row">
+            <div>
+              <label class="form-label">Cause Name *</label>
+              <input class="form-input" id="nc-name" placeholder="e.g. Ocean Cleanup" />
+            </div>
+            <div>
+              <label class="form-label">Goal Amount ($) *</label>
+              <input class="form-input" type="number" id="nc-goal" placeholder="50000" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label class="form-label">Emoji Icon</label>
+              <input class="form-input" id="nc-icon" placeholder="🌊" value="🌍" />
+            </div>
+            <div>
+              <label class="form-label">Accent Color</label>
+              <input class="form-input" id="nc-color" placeholder="#38bfa1" value="#6366f1" />
+            </div>
+          </div>
+          <label class="form-label">Description *</label>
+          <textarea class="form-textarea" id="nc-desc" placeholder="Describe this cause and its impact..."></textarea>
+          <button class="btn btn-teal" onclick="addCause()">+ Add Cause</button>
+        </div>
+      </div>
+
+      <!-- Post Update -->
+      <div class="admin-section" id="tab-post">
+        <h3 style="font-family:var(--font-d);font-size:26px;color:var(--text);margin-bottom:8px">Post Impact Update</h3>
+        <p style="color:var(--dim);margin-bottom:28px">Show contributors exactly how their money was used — this is public.</p>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px;margin-bottom:40px">
+          <label class="form-label">Cause</label>
+          <select class="form-select" id="upd-cause"></select>
+          <label class="form-label">Update Title *</label>
+          <input class="form-input" id="upd-title" placeholder="e.g. 5 Wells Drilled in Kenya" />
+          <div class="form-row">
+            <div>
+              <label class="form-label">Amount Spent ($) *</label>
+              <input class="form-input" type="number" id="upd-amount" placeholder="8500" />
+            </div>
+            <div>
+              <label class="form-label">Receipt / Ref #</label>
+              <input class="form-input" id="upd-receipt" placeholder="REC-2024-XXX" />
+            </div>
+          </div>
+          <label class="form-label">Description *</label>
+          <textarea class="form-textarea" id="upd-body" rows="4" placeholder="Describe what was accomplished..."></textarea>
+          <button class="btn btn-gold" onclick="postUpdate()">📢 Publish Update</button>
+        </div>
+        <h3 style="font-family:var(--font-d);font-size:22px;color:var(--text);margin-bottom:18px">Previous Updates</h3>
+        <div id="admin-updates-list"></div>
+      </div>
+
+      <!-- Contributors -->
+      <div class="admin-section" id="tab-contributors">
+        <h3 style="font-family:var(--font-d);font-size:26px;color:var(--text);margin-bottom:20px">All Contributors</h3>
+        <div class="ledger-wrap">
+          <div class="ledger-head">
+            <span>Contributor</span><span>Cause</span><span style="text-align:right;padding-right:10px">Amount</span><span>Date</span>
+          </div>
+          <div id="admin-contrib-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────── DONATE MODAL ─────────────────────────── -->
+<div class="modal-backdrop" id="donate-modal" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Donate</span>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────── FOOTER ───────────────────────────────── -->
+<footer>
+  <div class="footer-brand">OpenGive Foundation</div>
+  <div class="footer-tagline">100% transparent · Every dollar tracked · Every impact reported</div>
+  <div class="footer-links">
+    <span class="footer-link">Privacy Policy</span>
+    <span class="footer-link">Terms of Use</span>
+    <span class="footer-link">Contact Us</span>
+    <span class="footer-link">Annual Report</span>
+  </div>
+</footer>
+
+<script>
+// ─── Data ─────────────────────────────────────────────────────────────────────
+const DB = {
+  causes: [
+    { id:'c1', name:'Clean Water Initiative', desc:'Providing safe drinking water to underserved communities in sub-Saharan Africa.', goal:50000, color:'#38bfa1', icon:'💧', active:true },
+    { id:'c2', name:'Education for All',       desc:'Building schools and supplying materials for children in rural areas.',          goal:35000, color:'#d4a853', icon:'📚', active:true },
+    { id:'c3', name:'Food Security Program',   desc:'Eliminating hunger through sustainable farming and community food banks.',        goal:40000, color:'#4a9eff', icon:'🌾', active:true },
+    { id:'c4', name:'Disaster Relief Fund',    desc:'Rapid response support for communities affected by natural disasters.',          goal:60000, color:'#e05c5c', icon:'🆘', active:true },
+  ],
+  contributions: [
+    { id:'d1', name:'Sarah M.',  email:'sarah@ex.com',  causeId:'c1', amount:500,  message:'Keep up the incredible work!',  ts: Date.now()-864e5*5, anon:false },
+    { id:'d2', name:'Anonymous', email:'',              causeId:'c2', amount:250,  message:'',                              ts: Date.now()-864e5*4, anon:true  },
+    { id:'d3', name:'James T.',  email:'james@ex.com',  causeId:'c3', amount:1000, message:'For the children.',             ts: Date.now()-864e5*3, anon:false },
+    { id:'d4', name:'Priya K.',  email:'priya@ex.com',  causeId:'c1', amount:300,  message:'Water is life.',                ts: Date.now()-864e5*2, anon:false },
+    { id:'d5', name:'Anonymous', email:'',              causeId:'c4', amount:750,  message:'Prayers for the affected.',     ts: Date.now()-864e5*1, anon:true  },
+    { id:'d6', name:'Maria L.',  email:'maria@ex.com',  causeId:'c2', amount:200,  message:'Education changes everything.', ts: Date.now()-36e5*2,  anon:false },
+  ],
+  updates: [
+    { id:'u1', causeId:'c1', title:'Wells Drilled in Kenya',    body:'Thanks to your generosity, 3 new wells were drilled serving 1,200 people in Kisumu county.',       ts:Date.now()-864e5*3, amount:8500,  receipt:'REC-2024-001' },
+    { id:'u2', causeId:'c2', title:'50 Classrooms Renovated',   body:'We renovated 50 classrooms across 12 schools. 2,400 students now learn in safe environments.',       ts:Date.now()-864e5*1, amount:12000, receipt:'REC-2024-002' },
+    { id:'u3', causeId:'c3', title:'Food Bank Opens in Detroit', body:'A new community food bank opened serving 400 families per week. Equipment purchased and installed.', ts:Date.now()-36e5*5,  amount:6200,  receipt:'REC-2024-003' },
+  ]
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const fmt = n => new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
+const fmtDate = ts => new Date(ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const raised = cid => DB.contributions.filter(c=>c.causeId===cid).reduce((a,c)=>a+c.amount,0);
+const spent  = cid => DB.updates.filter(u=>u.causeId===cid).reduce((a,u)=>a+u.amount,0);
+
+const hashPw = async pw => {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+};
+const ADMIN_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'; // "admin"
+
+// ─── Navigation ───────────────────────────────────────────────────────────────
+let currentPage = 'home';
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  $('page-'+name).classList.add('active');
+  $('nav-'+name).classList.add('active');
+  currentPage = name;
+  if (name === 'transparency') renderTransparency();
+  if (name === 'admin' && adminAuthed) renderAdmin();
+}
+
+// ─── Home ─────────────────────────────────────────────────────────────────────
+function renderHome() {
+  const total = DB.contributions.reduce((a,c)=>a+c.amount,0);
+  $('home-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-val">${fmt(total)}</div><div class="stat-label">Total Raised</div></div>
+    <div class="stat-card"><div class="stat-val">${DB.contributions.length}</div><div class="stat-label">Contributors</div></div>
+    <div class="stat-card"><div class="stat-val">${DB.causes.filter(c=>c.active).length}</div><div class="stat-label">Active Causes</div></div>
+    <div class="stat-card"><div class="stat-val">${DB.updates.length}</div><div class="stat-label">Impact Reports</div></div>
+  `;
+  $('home-causes').innerHTML = DB.causes.filter(c=>c.active).map(c => {
+    const r = raised(c.id), pct = Math.min(100, r/c.goal*100).toFixed(1);
+    return `
+      <div class="cause-card" style="--accent:${c.color}" onmouseenter="this.style.borderColor='${c.color}'" onmouseleave="this.style.borderColor=''">
+        <div class="cause-icon">${c.icon}</div>
+        <div>
+          <div class="cause-name">${c.name}</div>
+          <div class="cause-desc">${c.desc}</div>
+        </div>
+        <div class="progress-wrap"><div class="progress-bar" style="width:${pct}%;background:${c.color}"></div></div>
+        <div class="cause-meta">
+          <span class="cause-raised" style="color:${c.color}">${fmt(r)} raised</span>
+          <span class="cause-goal">Goal: ${fmt(c.goal)}</span>
+        </div>
+        <button class="btn btn-teal" style="width:100%;background:linear-gradient(135deg,${c.color},${c.color}cc)" onclick="openDonate('${c.id}')">Donate ${c.icon}</button>
+      </div>`;
+  }).join('');
+}
+
+// ─── Transparency ─────────────────────────────────────────────────────────────
+let ledgerFilter = 'all';
+
+function renderTransparency() {
+  // Per-cause stats
+  $('transparency-stats').innerHTML = DB.causes.map(c => {
+    const r = raised(c.id);
+    return `<div class="stat-card"><div class="stat-val">${fmt(r)}</div><div class="stat-label">${c.name}</div><div class="stat-sub">${Math.round(r/c.goal*100)}% of goal</div></div>`;
+  }).join('');
+
+  // Filters
+  $('ledger-filters').innerHTML =
+    `<button class="filter-btn ${ledgerFilter==='all'?'active':''}" onclick="setFilter('all')">All (${DB.contributions.length})</button>` +
+    DB.causes.map(c => {
+      const n = DB.contributions.filter(x=>x.causeId===c.id).length;
+      return `<button class="filter-btn ${ledgerFilter===c.id?'active':''}" onclick="setFilter('${c.id}')">${c.icon} ${c.name} (${n})</button>`;
+    }).join('');
+
+  renderLedger();
+  renderUpdates();
+}
+
+function setFilter(f) {
+  ledgerFilter = f;
+  renderTransparency();
+}
+
+function renderLedger() {
+  const list = ledgerFilter === 'all' ? DB.contributions : DB.contributions.filter(c=>c.causeId===ledgerFilter);
+  const sorted = [...list].sort((a,b)=>b.ts-a.ts);
+  $('ledger-body').innerHTML = sorted.map((c,i) => {
+    const cause = DB.causes.find(x=>x.id===c.causeId);
+    return `<div class="ledger-row">
+      <div>
+        <div class="contrib-name" style="color:${c.anon?'var(--dim)':'var(--text)'}">${c.anon?'🔒 Anonymous':c.name}</div>
+        ${c.message?`<div class="contrib-msg">"${c.message}"</div>`:''}
+      </div>
+      <div class="contrib-cause">${cause?.icon}<span>${cause?.name}</span></div>
+      <div class="contrib-amount">${fmt(c.amount)}</div>
+      <div class="contrib-date">${fmtDate(c.ts)}</div>
+    </div>`;
+  }).join('');
+  const total = list.reduce((a,c)=>a+c.amount,0);
+  $('ledger-total').innerHTML = `Total: ${fmt(total)}`;
+}
+
+function renderUpdates() {
+  $('updates-list').innerHTML = [...DB.updates].sort((a,b)=>b.ts-a.ts).map(u => {
+    const cause = DB.causes.find(c=>c.id===u.causeId);
+    return `<div class="update-card" style="border-left-color:${cause?.color||'var(--gold)'}">
+      <div class="update-header">
+        <div>
+          <div class="update-title">${u.title}</div>
+          <div class="update-meta">${cause?.icon} ${cause?.name} &middot; ${fmtDate(u.ts)}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="update-spent">${fmt(u.amount)}</div>
+          <div class="update-receipt">Receipt: ${u.receipt}</div>
+        </div>
+      </div>
+      <p class="update-body">${u.body}</p>
+    </div>`;
+  }).join('');
+}
+
+// ─── Admin Auth ───────────────────────────────────────────────────────────────
+let adminAuthed = false;
+
+async function adminLogin() {
+  const pw = $('admin-pw').value;
+  const h = await hashPw(pw);
+  if (h === ADMIN_HASH) {
+    adminAuthed = true;
+    $('admin-login').style.display = 'none';
+    $('admin-dashboard').style.display = 'block';
+    renderAdmin();
+  } else {
+    $('admin-err').style.display = 'block';
+  }
+}
+
+function adminLogout() {
+  adminAuthed = false;
+  $('admin-login').style.display = 'block';
+  $('admin-dashboard').style.display = 'none';
+  $('admin-pw').value = '';
+  $('admin-err').style.display = 'none';
+}
+
+// ─── Admin Tabs ───────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  $('tab-'+name).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (name==='post') populateCauseSelect();
+}
+
+// ─── Admin Render ─────────────────────────────────────────────────────────────
+function renderAdmin() {
+  const totalR = DB.contributions.reduce((a,c)=>a+c.amount,0);
+  const totalS = DB.updates.reduce((a,u)=>a+u.amount,0);
+  $('admin-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-val">${fmt(totalR)}</div><div class="stat-label">Total Raised</div></div>
+    <div class="stat-card"><div class="stat-val">${fmt(totalS)}</div><div class="stat-label">Total Spent</div><div class="stat-sub">With receipts</div></div>
+    <div class="stat-card"><div class="stat-val">${fmt(totalR-totalS)}</div><div class="stat-label">Available</div></div>
+    <div class="stat-card"><div class="stat-val">${DB.contributions.length}</div><div class="stat-label">Contributions</div></div>
+  `;
+
+  $('admin-perf').innerHTML = DB.causes.map(c => {
+    const r = raised(c.id), s = spent(c.id), pct = Math.min(100,r/c.goal*100).toFixed(1);
+    return `<div class="perf-bar-wrap">
+      <div class="perf-bar-header">
+        <span style="font-weight:700;color:var(--text)">${c.icon} ${c.name}</span>
+        <span style="font-size:13px">
+          <span style="color:var(--teal)">${fmt(r)} raised</span>
+          <span style="color:var(--dim)"> · </span>
+          <span style="color:var(--red)">${fmt(s)} spent</span>
+          <span style="color:var(--dim)"> · </span>
+          <span style="color:var(--gold)">${fmt(r-s)} available</span>
+        </span>
+      </div>
+      <div class="progress-wrap"><div class="progress-bar" style="width:${pct}%;background:${c.color}"></div></div>
+    </div>`;
+  }).join('');
+
+  $('admin-causes-list').innerHTML = DB.causes.map(c => `
+    <div class="admin-cause-row">
+      <span class="admin-cause-name">${c.icon} ${c.name}</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="tag ${c.active?'tag-green':'tag-gold'}">${c.active?'Active':'Paused'}</span>
+        <button class="btn ${c.active?'btn-red':'btn-teal'}" style="padding:7px 16px;font-size:13px" onclick="toggleCause('${c.id}')">${c.active?'Pause':'Activate'}</button>
+      </div>
+    </div>`).join('');
+
+  $('admin-updates-list').innerHTML = [...DB.updates].sort((a,b)=>b.ts-a.ts).map(u => {
+    const cause = DB.causes.find(c=>c.id===u.causeId);
+    return `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 22px;margin-bottom:12px;flex-wrap:wrap;gap:12px">
+      <div><div style="font-weight:700;color:var(--text)">${u.title}</div><div style="font-size:13px;color:var(--dim);margin-top:3px">${cause?.icon} ${cause?.name} &middot; ${fmtDate(u.ts)}</div></div>
+      <div style="color:var(--red);font-weight:800">${fmt(u.amount)}</div>
+    </div>`;
+  }).join('');
+
+  $('admin-contrib-list').innerHTML = [...DB.contributions].sort((a,b)=>b.ts-a.ts).map((c,i) => {
+    const cause = DB.causes.find(x=>x.id===c.causeId);
+    return `<div class="ledger-row">
+      <div>
+        <div class="contrib-name">${c.name}</div>
+        ${c.email?`<div class="contrib-msg">${c.email}</div>`:''}
+      </div>
+      <div class="contrib-cause">${cause?.icon}<span>${cause?.name}</span></div>
+      <div class="contrib-amount">${fmt(c.amount)}</div>
+      <div class="contrib-date">${fmtDate(c.ts)}</div>
+    </div>`;
+  }).join('');
+
+  populateCauseSelect();
+}
+
+function populateCauseSelect() {
+  const sel = $('upd-cause');
+  if (sel) sel.innerHTML = DB.causes.map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
+}
+
+function toggleCause(id) {
+  const c = DB.causes.find(x=>x.id===id);
+  if (c) { c.active = !c.active; renderAdmin(); renderHome(); }
+}
+
+function addCause() {
+  const name = $('nc-name').value.trim();
+  const goal = parseFloat($('nc-goal').value);
+  const desc = $('nc-desc').value.trim();
+  if (!name||!goal||!desc) return alert('Please fill all required fields.');
+  DB.causes.push({ id:'c'+Date.now(), name, desc, goal, color: $('nc-color').value||'#6366f1', icon: $('nc-icon').value||'🌍', active:true });
+  ['nc-name','nc-goal','nc-desc'].forEach(id => $(id).value='');
+  renderAdmin(); renderHome();
+  alert('Cause added successfully!');
+}
+
+function postUpdate() {
+  const title  = $('upd-title').value.trim();
+  const body   = $('upd-body').value.trim();
+  const amount = parseFloat($('upd-amount').value);
+  const causeId= $('upd-cause').value;
+  if (!title||!body||!amount) return alert('Please fill all required fields.');
+  DB.updates.unshift({ id:'u'+Date.now(), causeId, title, body, amount, receipt: $('upd-receipt').value||'REC-'+Date.now(), ts: Date.now() });
+  ['upd-title','upd-body','upd-amount','upd-receipt'].forEach(id => $(id).value='');
+  renderAdmin();
+  alert('Update published successfully! It is now visible in the Transparency Ledger.');
+}
+
+// ─── Donate Modal ─────────────────────────────────────────────────────────────
+let donateState = { causeId:null, step:1, amount:0, custom:'', anon:false, name:'', email:'', msg:'', agree:false };
+
+function openDonate(causeId) {
+  donateState = { causeId, step:1, amount:0, custom:'', anon:false, name:'', email:'', msg:'', agree:false };
+  renderDonateStep();
+  $('donate-modal').classList.add('open');
+}
+
+function closeModal() {
+  $('donate-modal').classList.remove('open');
+}
+
+function renderDonateStep() {
+  const cause = DB.causes.find(c=>c.id===donateState.causeId);
+  const s = donateState;
+
+  if (s.step === 3) {
+    $('modal-title').textContent = '🎉 Thank You!';
+    $('modal-body').innerHTML = `<div class="success-panel">
+      <div class="success-emoji">🌟</div>
+      <h3 style="font-family:var(--font-d);font-size:28px;color:var(--text);margin-bottom:12px">Donation Confirmed!</h3>
+      <p style="color:var(--muted);margin-bottom:10px">Your <strong style="color:var(--teal)">${fmt(getFinalAmount())}</strong> gift to <strong style="color:var(--text)">${cause?.name}</strong> has been recorded.</p>
+      <p style="color:var(--dim);font-size:14px;margin-bottom:36px">You can view it in the Transparency Ledger. You'll receive an email receipt (in production).</p>
+      <button class="btn btn-gold" style="width:100%;padding:13px" onclick="closeModal();showPage('transparency')">View Ledger &rarr;</button>
+    </div>`;
+    return;
+  }
+
+  $('modal-title').textContent = s.step===1 ? `Donate to ${cause?.name}` : `Confirm Your Gift`;
+  const PRESETS = [25,50,100,250,500];
+
+  if (s.step === 1) {
+    $('modal-body').innerHTML = `
+      <div class="cause-banner">
+        <div class="cause-banner-icon">${cause?.icon}</div>
+        <div>
+          <div class="cause-banner-name">${cause?.name}</div>
+          <div class="cause-banner-desc">${cause?.desc}</div>
+        </div>
+      </div>
+      <label class="form-label">Choose Amount</label>
+      <div class="preset-grid">
+        ${PRESETS.map(p=>`<button class="preset-btn ${s.amount===p&&s.amount!=='custom'?'selected':''}" onclick="selectPreset(${p})">\$${p}</button>`).join('')}
+        <button class="preset-btn ${s.amount==='custom'?'selected':''}" onclick="selectPreset('custom')">Custom</button>
+      </div>
+      <div id="custom-input-wrap" style="display:${s.amount==='custom'?'block':'none'}">
+        <label class="form-label">Enter Amount ($)</label>
+        <input class="form-input" type="number" id="custom-amt" value="${s.custom}" placeholder="Enter amount" oninput="donateState.custom=this.value" />
+      </div>
+      <button class="btn btn-teal" style="width:100%;padding:13px;margin-top:8px" onclick="goStep2()">Continue &rarr; ${getFinalAmount()>0?fmt(getFinalAmount()):''}</button>
+    `;
+  } else if (s.step === 2) {
+    $('modal-body').innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+        <button class="btn btn-ghost" style="padding:7px 12px" onclick="donateState.step=1;renderDonateStep()">&larr;</button>
+        <span style="color:var(--teal);font-weight:800;font-size:20px">${fmt(getFinalAmount())}</span>
+        <span style="color:var(--dim)">to ${cause?.icon} ${cause?.name}</span>
+      </div>
+      <label class="form-check">
+        <input type="checkbox" id="chk-anon" ${s.anon?'checked':''} onchange="donateState.anon=this.checked;toggleAnonFields()" />
+        <span>Donate anonymously — your name won't appear in the public ledger</span>
+      </label>
+      <div id="name-fields" style="display:${s.anon?'none':'block'}">
+        <label class="form-label">Full Name *</label>
+        <input class="form-input" id="inp-name" value="${s.name}" placeholder="Jane Doe" oninput="donateState.name=this.value" />
+        <label class="form-label">Email (optional)</label>
+        <input class="form-input" type="email" id="inp-email" value="${s.email}" placeholder="jane@example.com" oninput="donateState.email=this.value" />
+      </div>
+      <label class="form-label">Message (optional)</label>
+      <textarea class="form-textarea" id="inp-msg" placeholder="Leave an encouraging message..." oninput="donateState.msg=this.value">${s.msg}</textarea>
+      <div class="security-note">
+        🔒 <strong style="color:var(--text)">Security:</strong> This is a demo — no real payment is processed.
+        In production, we integrate Stripe (PCI-compliant, SSL-encrypted) or PayPal Giving Fund.
+        Zero financial data is stored on this server.
+      </div>
+      <label class="form-check">
+        <input type="checkbox" id="chk-agree" ${s.agree?'checked':''} onchange="donateState.agree=this.checked" />
+        <span>I agree that this contribution will be publicly visible in the transparency ledger and confirm I am of legal age.</span>
+      </label>
+      <button class="btn btn-teal" style="width:100%;padding:14px;font-size:16px;margin-top:8px" onclick="confirmDonate()">✓ Confirm ${fmt(getFinalAmount())}</button>
+    `;
+  }
+}
+
+function getFinalAmount() {
+  const s = donateState;
+  if (s.amount === 'custom') return parseFloat(s.custom)||0;
+  return typeof s.amount === 'number' ? s.amount : 0;
+}
+
+function selectPreset(val) {
+  donateState.amount = val;
+  if (val !== 'custom') donateState.custom = '';
+  renderDonateStep();
+  if (val === 'custom') setTimeout(()=>{ const el=$('custom-amt'); if(el) el.focus(); },50);
+}
+
+function toggleAnonFields() {
+  const el = $('name-fields');
+  if (el) el.style.display = donateState.anon ? 'none' : 'block';
+}
+
+function goStep2() {
+  const amt = getFinalAmount();
+  if (!amt||amt<=0) return alert('Please select or enter a valid amount.');
+  donateState.step = 2;
+  renderDonateStep();
+}
+
+function confirmDonate() {
+  const s = donateState;
+  const amt = getFinalAmount();
+  if (!amt||amt<=0) return alert('Invalid amount.');
+  if (!s.anon && !$('inp-name').value.trim()) return alert('Please enter your name or choose anonymous.');
+  if (!$('chk-agree').checked) return alert('Please agree to the terms.');
+
+  const contrib = {
+    id: 'd'+Date.now(),
+    name: s.anon ? 'Anonymous' : ($('inp-name').value.trim()||'Anonymous'),
+    email: s.anon ? '' : ($('inp-email')?.value.trim()||''),
+    causeId: s.causeId,
+    amount: amt,
+    message: $('inp-msg')?.value.trim()||'',
+    ts: Date.now(),
+    anon: s.anon
+  };
+  DB.contributions.push(contrib);
+  renderHome();
+  donateState.step = 3;
+  renderDonateStep();
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+renderHome();
+
+// Trigger progress bar animations
+window.addEventListener('load', ()=>{
+  setTimeout(()=>{
+    document.querySelectorAll('.progress-bar').forEach(b=>{
+      const w = b.style.width; b.style.width='0'; setTimeout(()=>b.style.width=w,50);
+    });
+  },200);
+});
+</script>
+</body>
+</html>
